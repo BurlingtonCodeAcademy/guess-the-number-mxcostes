@@ -28,7 +28,7 @@ async function guessFcn(maxGuess, minGuess) {
 
     const product = Number.parseFloat((random * difference) + 1);
 
-    const optimalGuess = Number.parseFloat((((difference)/2) + 1)+ minNumber)
+    const optimalGuess = Number.parseFloat(((difference)/2) + (minNumber + 1))
 
 //alternative for optimal solution
 
@@ -60,7 +60,7 @@ async function guessFcn(maxGuess, minGuess) {
 
   if (responseSan === 'yes') {
 
-    console.log('Conratulations you have guessed the number.');
+    console.log('AH HA! May the SkyNet takeover begin!');
 
     process.exit();
 
@@ -69,6 +69,10 @@ async function guessFcn(maxGuess, minGuess) {
   if (responseSan === 'no') {
 
     await ifNo(guess, maxNumber, minNumber);
+
+  } if (responseSan !== 'no' || responseSan !== 'yes'){
+    
+    await guessFcn(maxGuess, minGuess)
 
   }
 
@@ -95,6 +99,11 @@ async function ifNo(wrongGuess, max, min) {
     await guessFcn(wrongGuess, min)
 
     //lower(guess);
+
+  }
+  if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher'){
+
+    await ifNo(wrongGuess, max, min);
 
   }
 

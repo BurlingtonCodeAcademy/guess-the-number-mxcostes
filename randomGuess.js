@@ -70,6 +70,11 @@ async function guessFcn(maxGuess, minGuess) {
 
   }
 
+  if (responseSan !== 'no' || responseSan !== 'yes'){
+    
+    await guessFcn(maxGuess, minGuess)
+
+ }
 }
 
  
@@ -96,6 +101,11 @@ async function ifNo(wrongGuess, max, min) {
 
   }
 
+  if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher'){
+
+    await ifNo(wrongGuess, max, min);
+
+  }
 }
 
  
