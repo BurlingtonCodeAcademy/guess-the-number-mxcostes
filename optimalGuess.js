@@ -28,7 +28,7 @@ async function guessFcn(maxGuess, minGuess) {
 
     const product = Number.parseFloat((random * difference) + 1);
 
-    //const optimalGuess = NUmber.parseFloat(((maxNumber - minNumber)/2)+ minNumber)
+    const optimalGuess = Number.parseFloat((((difference)/2) + 1)+ minNumber)
 
 //alternative for optimal solution
 
@@ -36,7 +36,7 @@ async function guessFcn(maxGuess, minGuess) {
 
 //used for random guess
 
-    const rawGuess = (Number(product)) + Number(minGuess);
+    //const rawGuess = (Number(product)) + Number(minGuess);
 
     console.log(difference)
 
@@ -44,13 +44,13 @@ async function guessFcn(maxGuess, minGuess) {
 
     console.log(product)
 
-    console.log(rawGuess)
+    console.log(optimalGuess)
 
     console.log(minNumber)
 
     console.log(maxGuess)
 
-  let guess = Math.floor(rawGuess); 
+  let guess = Math.floor(optimalGuess); 
 
   let response = await ask('Is it ' + guess + '? (yes or no)  ');
 
