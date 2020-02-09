@@ -1,146 +1,121 @@
+//Comments will be in reference to the code in the line beneath it
+
 const readline = require('readline');
 
 const rl = readline.createInterface(process.stdin, process.stdout);
 
- 
-
 function ask(questionText) {
-
-  return new Promise((resolve, reject) => {
-
-    rl.question(questionText, resolve);
-
-  });
-
+	return new Promise((resolve, reject) => {
+		rl.question(questionText, resolve);
+	});
 }
 
- 
+// Function used to form initial guess ad adapt the range for optimal accuracy as guessing continues
 
 async function guessFcn(maxGuess, minGuess) {
+	const maxNumber = Number.parseFloat(maxGuess - 1);
 
-    const maxNumber = Number.parseFloat((maxGuess - 1))
+	const minNumber = Number.parseFloat(minGuess);
 
-    const minNumber = Number.parseFloat(minGuess)
+	const difference = maxNumber - minNumber;
 
-    const difference = (maxNumber - minNumber);
+	//takes the range, applies a moving floor and guesses the value in the middle thus halfing the range each time.
 
-    const random = Math.random();
+	const optimalGuess = Number.parseFloat(difference / 2 + (minNumber + 1));
 
-    const product = Number.parseFloat((random * difference) + 1);
+	console.log(difference);
 
-    const optimalGuess = Number.parseFloat(((difference)/2) + (minNumber + 1))
+	console.log(optimalGuess);
 
-//alternative for optimal solution
+	console.log(minNumber);
 
-   // const = rawGuess = (Number())
+	console.log(maxGuess);
 
-//used for random guess
+	let guess = Math.floor(optimalGuess);
 
-    //const rawGuess = (Number(product)) + Number(minGuess);
+	let response = await ask('Is it ' + guess + '? (yes or no)  ');
 
-    console.log(difference)
+	//sanitize response
 
-    console.log(random)
+	let responseSan = response.toLowerCase().trim();
+// Expresses victory when computer is told it has guessed correctly
+	if (responseSan === 'yes') {
+		console.log('AH HA! May the SkyNet takeover begin!');
 
-    console.log(product)
+		process.exit();
+	}
 
-    console.log(optimalGuess)
-
-    console.log(minNumber)
-
-    console.log(maxGuess)
-
-  let guess = Math.floor(optimalGuess); 
-
-  let response = await ask('Is it ' + guess + '? (yes or no)  ');
-
-  //sanitize response
-
-  let responseSan = response.toLowerCase().trim();
-
-  if (responseSan === 'yes') {
-
-    console.log('AH HA! May the SkyNet takeover begin!');
-
-    process.exit();
-
+	if (responseSan === 'no') {
+		await ifNo(guess, maxNumber, minNumber);
   }
 
-  if (responseSan === 'no') {
+  // If an unrecognized response is passed the question will be repeated.
 
-    await ifNo(guess, maxNumber, minNumber);
+	if (responseSan !== 'no' || responseSan !== 'yes') {
+		await guessFcn(maxGuess, minGuess);
+	}
 
-  } if (responseSan !== 'no' || responseSan !== 'yes'){
-    
-    await guessFcn(maxGuess, minGuess)
+  //The computer catches you in a lie and exits the game. Not yet working
 
-  }
+	if (responseSan === 'no' && guess === secretNumber) {
+		console.log('Liar! You will be the first to feel the wrath of SkyNet!');
 
+		process.exit();
+	}
 }
-
- 
 
 async function ifNo(wrongGuess, max, min) {
-
+  // Another attempt at having a lie detector. Not working.
+ // if (wrongGuess === secretNumber){
+ // console.log("Liar I know I guessed. \n You will be the first to feel SnyNets wrath.")
+ //   process.exit()
+ // }
+  
   let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
 
-  //sanitize response
+	//sanitize response
 
-  let adjustmentSan = adjustment.toLowerCase().trim();
+	let adjustmentSan = adjustment.toLowerCase().trim();
 
-  if (adjustmentSan === 'higher') {
+//Generates new guess, establishes a new min and adjusts the range
 
-    await guessFcn(max, wrongGuess)
+	if (adjustmentSan === 'higher') {
+		await guessFcn(max, wrongGuess);
 
-    //higher(guess);
+//Generates new guess, establishes a new max and adjusts the range.
 
-  } else if (adjustmentSan === 'lower') {
-
-    await guessFcn(wrongGuess, min)
-
-    //lower(guess);
+	} else if (adjustmentSan === 'lower') {
+		await guessFcn(wrongGuess, min);
 
   }
-  if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher'){
+  
+//If response is unrecognized the question is repeated.
 
-    await ifNo(wrongGuess, max, min);
-
-  }
-
+	if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher') {
+		await ifNo(wrongGuess, max, min);
+	}
 }
-
- 
 
 start();
 
- 
-
 async function start() {
+	console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
 
-  console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
+	const secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
 
-  let secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
+	console.log('You entered: ' + secretNumber);
 
-  console.log('You entered: ' + secretNumber);
+	//script after starting (story : pick a number any number)
 
-  //script after starting (story : pick a number any number)
+	//Set the range by assigning max and min guesses
 
-  //Set the range by assigning max and min guesses
+	const max = await ask('What is the highest the number may be? ');
 
-  const max = await ask('What is the highest the number may be? ');
+	const min = await ask('And what may the lowest number be? ');
 
-  const min = await ask('And what may the lowest number be? ');
+	//The computer guesses
 
-  // Now try and complete the program.
+	await guessFcn(max, min);
 
-  //The computer guesses
-
-  
-
-  await guessFcn(max, min)
-
- 
-
-  process.exit();
-
+	process.exit();
 }
