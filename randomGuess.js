@@ -10,7 +10,7 @@ function ask(questionText) {
 
 async function guessFcn(maxGuess, minGuess) {
   //funciton takes the changing min and max and makes a random guess within the parameters
-	const maxNumber = Number.parseFloat(maxGuess - 1);
+	const maxNumber = Number.parseFloat(maxGuess);
 
 	const minNumber = Number.parseFloat(minGuess);
 
@@ -18,9 +18,9 @@ async function guessFcn(maxGuess, minGuess) {
 
 	const random = Math.random();
 
-	const product = Number.parseFloat(random * difference + 1);
+	const product = Number.parseFloat(random * difference);
 
-	const rawGuess = Number(product) + Number(minGuess);
+	const rawGuess = Number(product) + Number(minGuess + 1);
 
 	let guess = Math.floor(rawGuess);
 
