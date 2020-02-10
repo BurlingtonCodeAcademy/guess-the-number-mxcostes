@@ -2,144 +2,110 @@ const readline = require('readline');
 
 const rl = readline.createInterface(process.stdin, process.stdout);
 
- 
-
 function ask(questionText) {
-
-  return new Promise((resolve, reject) => {
-
-    rl.question(questionText, resolve);
-
-  });
-
+	return new Promise((resolve, reject) => {
+		rl.question(questionText, resolve);
+	});
 }
-
- 
 
 async function guessFcn(maxGuess, minGuess) {
+	const maxNumber = Number.parseFloat(maxGuess - 1);
 
-    const maxNumber = Number.parseFloat((maxGuess - 1))
+	const minNumber = Number.parseFloat(minGuess);
 
-    const minNumber = Number.parseFloat(minGuess)
+	const difference = maxNumber - minNumber;
 
-    const difference = (maxNumber - minNumber);
+	const random = Math.random();
 
-    const random = Math.random();
+	const product = Number.parseFloat(random * difference + 1);
 
-    const product = Number.parseFloat((random * difference) + 1);
+	//alternative for optimal solution
 
-//alternative for optimal solution
+	// const = rawGuess = (Number())
 
-   // const = rawGuess = (Number())
+	//used for random guess
 
-//used for random guess
+	const rawGuess = Number(product) + Number(minGuess);
 
-    const rawGuess = (Number(product)) + Number(minGuess);
+	console.log(difference);
 
-    console.log(difference)
+	console.log(random);
 
-    console.log(random)
+	console.log(product);
 
-    console.log(product)
+	console.log(rawGuess);
 
-    console.log(rawGuess)
+	console.log(minNumber);
 
-    console.log(minNumber)
+	console.log(maxGuess);
 
-    console.log(maxGuess)
+	let guess = Math.floor(rawGuess);
 
-  let guess = Math.floor(rawGuess); 
+	let response = await ask('Is it ' + guess + '? (yes or no)  ');
 
-  let response = await ask('Is it ' + guess + '? (yes or no)  ');
+	//sanitize response
 
-  //sanitize response
+	let responseSan = response.toLowerCase().trim();
 
-  let responseSan = response.toLowerCase().trim();
+	if (responseSan === 'yes') {
+		console.log('Conratulations you have guessed the number.');
 
-  if (responseSan === 'yes') {
+		process.exit();
+	}
 
-    console.log('Conratulations you have guessed the number.');
+	if (responseSan === 'no') {
+		await ifNo(guess, maxNumber, minNumber);
+	}
 
-    process.exit();
-
-  }
-
-  if (responseSan === 'no') {
-
-    await ifNo(guess, maxNumber, minNumber);
-
-  }
-
-  if (responseSan !== 'no' || responseSan !== 'yes'){
-    
-    await guessFcn(maxGuess, minGuess)
-
- }
+	if (responseSan !== 'no' || responseSan !== 'yes') {
+		await guessFcn(maxGuess, minGuess);
+	}
 }
-
- 
 
 async function ifNo(wrongGuess, max, min) {
+	let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
 
-  let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
+	//sanitize response
 
-  //sanitize response
+	let adjustmentSan = adjustment.toLowerCase().trim();
 
-  let adjustmentSan = adjustment.toLowerCase().trim();
+	if (adjustmentSan === 'higher') {
+		await guessFcn(max, wrongGuess);
 
-  if (adjustmentSan === 'higher') {
+		//higher(guess);
+	} else if (adjustmentSan === 'lower') {
+		await guessFcn(wrongGuess, min);
 
-    await guessFcn(max, wrongGuess)
+		//lower(guess);
+	}
 
-    //higher(guess);
-
-  } else if (adjustmentSan === 'lower') {
-
-    await guessFcn(wrongGuess, min)
-
-    //lower(guess);
-
-  }
-
-  if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher'){
-
-    await ifNo(wrongGuess, max, min);
-
-  }
+	if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher') {
+		await ifNo(wrongGuess, max, min);
+	}
 }
-
- 
 
 start();
 
- 
-
 async function start() {
+	console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
 
-  console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
+	let secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
 
-  let secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
+	console.log('You entered: ' + secretNumber);
 
-  console.log('You entered: ' + secretNumber);
+	//script after starting (story : pick a number any number)
 
-  //script after starting (story : pick a number any number)
+	//Set the range by assigning max and min guesses
 
-  //Set the range by assigning max and min guesses
+	const max = await ask('What is the highest the number may be? ');
 
-  const max = await ask('What is the highest the number may be? ');
+	const min = await ask('And what may the lowest number be? ');
 
-  const min = await ask('And what may the lowest number be? ');
+	// Now try and complete the program.
 
-  // Now try and complete the program.
+	//The computer guesses
 
-  //The computer guesses
+	await guessFcn(max, min);
 
-  
-
-  await guessFcn(max, min)
-
- 
-
-  process.exit();
-
+	process.exit();
 }

@@ -13,7 +13,7 @@ function ask(questionText) {
 // Function used to form initial guess ad adapt the range for optimal accuracy as guessing continues
 
 async function guessFcn(maxGuess, minGuess) {
-	const maxNumber = Number.parseFloat(maxGuess - 1);
+	const maxNumber = Number.parseFloat(maxGuess);
 
 	const minNumber = Number.parseFloat(minGuess);
 
@@ -21,7 +21,7 @@ async function guessFcn(maxGuess, minGuess) {
 
 	//takes the range, applies a moving floor and guesses the value in the middle thus halfing the range each time.
 
-	const optimalGuess = Number.parseFloat(difference / 2 + (minNumber + 1));
+	const optimalGuess = Number.parseFloat(difference / 2 + (minNumber));
 
 	console.log(difference);
 
@@ -38,7 +38,9 @@ async function guessFcn(maxGuess, minGuess) {
 	//sanitize response
 
 	let responseSan = response.toLowerCase().trim();
-// Expresses victory when computer is told it has guessed correctly
+
+	// Expresses victory when computer is told it has guessed correctly
+
 	if (responseSan === 'yes') {
 		console.log('AH HA! May the SkyNet takeover begin!');
 
@@ -47,15 +49,15 @@ async function guessFcn(maxGuess, minGuess) {
 
 	if (responseSan === 'no') {
 		await ifNo(guess, maxNumber, minNumber);
-  }
+	}
 
-  // If an unrecognized response is passed the question will be repeated.
+	// If an unrecognized response is passed the question will be repeated.
 
 	if (responseSan !== 'no' || responseSan !== 'yes') {
 		await guessFcn(maxGuess, minGuess);
 	}
 
-  //The computer catches you in a lie and exits the game. Not yet working
+	//The computer catches you in a lie and exits the game. Not yet working
 
 	if (responseSan === 'no' && guess === secretNumber) {
 		console.log('Liar! You will be the first to feel the wrath of SkyNet!');
@@ -65,31 +67,29 @@ async function guessFcn(maxGuess, minGuess) {
 }
 
 async function ifNo(wrongGuess, max, min) {
-  // Another attempt at having a lie detector. Not working.
- // if (wrongGuess === secretNumber){
- // console.log("Liar I know I guessed. \n You will be the first to feel SnyNets wrath.")
- //   process.exit()
- // }
-  
-  let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
+	// Another attempt at having a lie detector. Not working.
+	// if (wrongGuess === secretNumber){
+	// console.log("Liar I know I guessed. \n You will be the first to feel SnyNets wrath.")
+	//   process.exit()
+	// }
+
+	let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
 
 	//sanitize response
 
 	let adjustmentSan = adjustment.toLowerCase().trim();
 
-//Generates new guess, establishes a new min and adjusts the range
+	//Generates new guess, establishes a new min and adjusts the range
 
 	if (adjustmentSan === 'higher') {
 		await guessFcn(max, wrongGuess);
 
-//Generates new guess, establishes a new max and adjusts the range.
-
+		//Generates new guess, establishes a new max and adjusts the range.
 	} else if (adjustmentSan === 'lower') {
 		await guessFcn(wrongGuess, min);
+	}
 
-  }
-  
-//If response is unrecognized the question is repeated.
+	//If response is unrecognized the question is repeated.
 
 	if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher') {
 		await ifNo(wrongGuess, max, min);
