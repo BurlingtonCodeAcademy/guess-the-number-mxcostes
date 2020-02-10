@@ -13,6 +13,7 @@ function ask(questionText) {
 // Function used to form initial guess ad adapt the range for optimal accuracy as guessing continues
 
 async function guessFcn(maxGuess, minGuess) {
+  //establishes range that will adapt as the guesses narrow the max and min. Will make the optimal guess in hte middle of the range.
 	const maxNumber = Number.parseFloat(maxGuess);
 
 	const minNumber = Number.parseFloat(minGuess);
@@ -23,13 +24,6 @@ async function guessFcn(maxGuess, minGuess) {
 
 	const optimalGuess = Number.parseFloat(difference / 2 + (minNumber));
 
-	console.log(difference);
-
-	console.log(optimalGuess);
-
-	console.log(minNumber);
-
-	console.log(maxGuess);
 
 	let guess = Math.floor(optimalGuess);
 
@@ -42,12 +36,14 @@ async function guessFcn(maxGuess, minGuess) {
 	// Expresses victory when computer is told it has guessed correctly
 
 	if (responseSan === 'yes') {
+    //Computer celebrates and exits program
 		console.log('AH HA! May the SkyNet takeover begin!');
 
 		process.exit();
 	}
 
 	if (responseSan === 'no') {
+    //sends into function to gain lend some guidance to the computer
 		await ifNo(guess, maxNumber, minNumber);
 	}
 
@@ -67,13 +63,7 @@ async function guessFcn(maxGuess, minGuess) {
 }
 
 async function ifNo(wrongGuess, max, min) {
-	// Another attempt at having a lie detector. Not working.
-	// if (wrongGuess === secretNumber){
-	// console.log("Liar I know I guessed. \n You will be the first to feel SnyNets wrath.")
-	//   process.exit()
-	// }
-
-	let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
+  let adjustment = await ask('Is it higher or lower? (higher or lower)  ');
 
 	//sanitize response
 
@@ -100,7 +90,7 @@ start();
 
 async function start() {
 	console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
-
+//sets number to be sought
 	const secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
 
 	console.log('You entered: ' + secretNumber);

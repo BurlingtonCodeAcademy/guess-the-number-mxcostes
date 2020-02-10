@@ -9,6 +9,7 @@ function ask(questionText) {
 }
 
 async function guessFcn(maxGuess, minGuess) {
+  //funciton takes the changing min and max and makes a random guess within the parameters
 	const maxNumber = Number.parseFloat(maxGuess - 1);
 
 	const minNumber = Number.parseFloat(minGuess);
@@ -19,25 +20,7 @@ async function guessFcn(maxGuess, minGuess) {
 
 	const product = Number.parseFloat(random * difference + 1);
 
-	//alternative for optimal solution
-
-	// const = rawGuess = (Number())
-
-	//used for random guess
-
 	const rawGuess = Number(product) + Number(minGuess);
-
-	console.log(difference);
-
-	console.log(random);
-
-	console.log(product);
-
-	console.log(rawGuess);
-
-	console.log(minNumber);
-
-	console.log(maxGuess);
 
 	let guess = Math.floor(rawGuess);
 
@@ -54,10 +37,12 @@ async function guessFcn(maxGuess, minGuess) {
 	}
 
 	if (responseSan === 'no') {
+    //triggers if no response giving the computer guidance
 		await ifNo(guess, maxNumber, minNumber);
 	}
 
 	if (responseSan !== 'no' || responseSan !== 'yes') {
+    // repeats question when recieving unrecognized responses
 		await guessFcn(maxGuess, minGuess);
 	}
 }
@@ -80,6 +65,7 @@ async function ifNo(wrongGuess, max, min) {
 	}
 
 	if (adjustmentSan !== 'lower' || adjustmentSan !== 'higher') {
+    // repeats the questions when an unrecognized response is received
 		await ifNo(wrongGuess, max, min);
 	}
 }
@@ -88,12 +74,10 @@ start();
 
 async function start() {
 	console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
-
+// secret number is establishes which the compuer will seek while adjusting guesses acoording to an adapting range
 	let secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
 
 	console.log('You entered: ' + secretNumber);
-
-	//script after starting (story : pick a number any number)
 
 	//Set the range by assigning max and min guesses
 
