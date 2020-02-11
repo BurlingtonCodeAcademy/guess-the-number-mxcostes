@@ -10,15 +10,15 @@ function ask(questionText) {
 
 async function guessFcn(maxGuess, minGuess) {
   //funciton takes the changing min and max and makes a random guess within the parameters
-	const maxNumber = Number.parseFloat(maxGuess);
+	const maxNumber = parseInt(maxGuess);
 
-	const minNumber = Number.parseFloat(minGuess);
+	const minNumber = parseInt(minGuess);
 
 	const difference = maxNumber - minNumber;
 
 	const random = Math.random();
 
-	const product = Number.parseFloat(random * difference);
+	const product = parsefloat(random * difference);
 
 	const rawGuess = Number(product) + Number(minGuess + 1);
 
@@ -70,26 +70,41 @@ async function ifNo(wrongGuess, max, min) {
 	}
 }
 
+async function range(){
+	 max = await ask('What is the highest the number may be? ');
+
+	 min = await ask('And what may the lowest number be? ');
+}
+
 start();
 
 async function start() {
 	console.log("Let's play a game where you (human) make up a number and I (computer) try to guess it.");
-// secret number is establishes which the compuer will seek while adjusting guesses acoording to an adapting range
+
+	//Set the range by assigning max and min guesses
+	await range()
+	 if (max<min){
+		 console.log('Please enter a higher number and then a lower number.')
+		 await range()
+	 } if (max>min) {
+	
+
+	// secret number is establishes which the compuer will seek while adjusting guesses acoording to an adapting range
+
 	let secretNumber = await ask("What is your secret number?\nI won't peek, I promise...\n");
 
 	console.log('You entered: ' + secretNumber);
 
-	//Set the range by assigning max and min guesses
-
-	const max = await ask('What is the highest the number may be? ');
-
-	const min = await ask('And what may the lowest number be? ');
-
+	//if (max < min){
+	//	console.log('Please entere th higherst number before the lowest number.')
+	//	start()
+	//}
 	// Now try and complete the program.
-
+	
 	//The computer guesses
 
 	await guessFcn(max, min);
 
 	process.exit();
+}
 }
