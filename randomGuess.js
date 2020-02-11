@@ -18,9 +18,9 @@ async function guessFcn(maxGuess, minGuess) {
 
 	const random = Math.random();
 
-	const product = parsefloat(random * difference);
+	const product = parseFloat(random * difference);
 
-	const rawGuess = Number(product) + Number(minGuess + 1);
+	const rawGuess = Number(product) + Number(minNumber + 1);
 
 	let guess = Math.floor(rawGuess);
 
@@ -69,7 +69,7 @@ async function ifNo(wrongGuess, max, min) {
 		await ifNo(wrongGuess, max, min);
 	}
 }
-
+//range assigning function
 async function range(){
 	 max = await ask('What is the highest the number may be? ');
 
@@ -83,8 +83,9 @@ async function start() {
 
 	//Set the range by assigning max and min guesses
 	await range()
+	//ensures a valid range
 	 if (max<min){
-		 console.log('Please enter a higher number and then a lower number.')
+		 console.log('\nPlease enter a higher number and then a lower number.')
 		 await range()
 	 } if (max>min) {
 	
